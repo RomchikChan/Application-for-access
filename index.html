@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Тест проекта</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; background: #0b0c10; color: #eee; }
+    header { padding: 20px; text-align: center; background: #15171e; }
+    h1 { margin: 0; font-size: 32px; }
+    main { max-width: 900px; margin: 0 auto; padding: 20px; }
+    .card { background: #15171e; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+    .buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+    .btn {
+      display: inline-block;
+      padding: 10px 18px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      border: 1px solid #3ab54a;
+      color: #fff;
+      background: #3ab54a;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn.secondary {
+      background: transparent;
+      color: #3ab54a;
+    }
+    .btn:hover { background: #48c45a; transform: translateY(-1px); }
+    .btn.secondary:hover { background: rgba(58,181,74,0.1); }
+    code { background: #0b0c10; padding: 2px 4px; border-radius: 4px; }
+    .status-online { color: #4caf50; font-weight: 700; }
+    .status-offline { color: #f44336; font-weight: 700; }
+    footer { text-align: center; padding: 10px 0 20px; font-size: 12px; color: #777; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>НАЗВАНИЕ ОЧЕРЕДНОЙ ХЕРНИ/СЕРВЕРА</h1>
+  <p>Краткое описание сервера или что-то там... 
+  </p>
+</header>
+
+<main>
+  <section class="card">
+    <h2>О сервере</h2>
+    <p>
+      Что-то там про сервер... 
+    </p>
+    <p>
+      Адрес сервера: <code>DNS/IP/PORT</code><br>
+      Версия клиента: <code>X.XX.X</code>
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Онлайн сервера</h2>
+    <p id="server-status">Проверка статуса сервера...</p>
+    <p id="server-players"></p>
+  </section>
+
+  <section class="card">
+    <h2>Как попасть на сервер</h2>
+    <ol>
+      <li>Скачай нашу сборку клиента.</li>
+      <li>Отправь заявку на вайт-лист.</li>
+      <li>Дождись одобрения и заходи по адресу сервера.</li>
+    </ol>
+    <div class="buttons">
+      <a class="btn" 
+      href="ССЫЛКА_НА_СБОРКУ" 
+      target="_blank" rel="noopener">
+        Скачать сборку
+      </a>
+      <a class="btn secondary" 
+      href="https://docs.google.com/forms/d/e/1FAIpQLScXFmYOaUdD_0Vlyrm6G9GweF7qiv_RkxO5GIsSv2vpDAUa2w/viewform?usp=header" 
+      target="_blank" rel="noopener">
+        Подать заявку на вайт-лист
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Пока вы ровно-тихо сидели на месте, мы с Anonymous Club создали проект по заработку денег, переходи к нам в телеграм
+</footer>
+
+<script>
+// НАСТРОЙКА: 
+const MC_SERVER_ADDRESS = "ТВОЙ.DNS.ИЛИ.IP";     // DNS/IP
+const MC_SERVER_PORT = 25565;                    // ЕСЛИ ХОСТИНГ ГОВНА ПОЕЛ
+// API mcsrvstat.us СТАТУСА СЕРВЕРА 
+async function updateServerStatus() {
+  const statusEl = document.getElementById("server-status");
+  const playersEl = document.getElementById("server-players");
+
+  try {
+    const resp = await fetch(`https://api.mcsrvstat.us/2/${MC_SERVER_ADDRESS}:${MC_SERVER_PORT}`);
+    const data = await resp.json();
+
+    if (!data.online) {
+      statusEl.innerHTML = 'Статус: <span class="status-offline">офлайн</span>';
+      playersEl.textContent = "Сервер сейчас недоступен или скрыт.";
+      return;
+    }
+
+    statusEl.innerHTML = 'Статус: <span class="status-online">онлайн</span>';
+    playersEl.textContent =
+      `Игроков онлайн: ${data.players.online} из ${data.players.max}`;
+  } catch (e) {
+    statusEl.innerHTML = 'Статус: <span class="status-offline">ошибка проверки</span>';
+    playersEl.textContent = "Не удалось получить статус сервера.";
+  }
+}
+
+// ОБНОВЛЕНИЕ СТАТУСА
+updateServerStatus();
+</script>
+</body>
+</html>
