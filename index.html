@@ -5,13 +5,46 @@
   <title>AnonimСraft</title>
   <link rel="icon" type="image/png" href="favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <style>
-    body { font-family: system-ui, sans-serif; margin: 0; background: #0b0c10; color: #eee; }
-    header { padding: 20px; text-align: center; background: #15171e; }
+    :root {
+      --bg: #0b0c10;
+      --card-bg: #15171e;
+      --text: #eee;
+      --muted: #777;
+      --accent: #3ab54a;
+      --accent-hover: #48c45a;
+      --code-bg: #0b0c10;
+    }
+
+    body.light {
+      --bg: #f3f4f6;
+      --card-bg: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --accent: #16a34a;
+      --accent-hover: #22c55e;
+      --code-bg: #e5e7eb;
+    }
+
+    body {
+      font-family: system-ui, sans-serif;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      background: var(--card-bg);
+    }
+
     h1 { margin: 0; font-size: 32px; }
     main { max-width: 900px; margin: 0 auto; padding: 20px; }
-    .card { background: #15171e; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+    .card { background: var(--card-bg); border-radius: 8px; padding: 20px; margin-bottom: 20px; }
     .buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+
     .btn {
       display: inline-block;
       padding: 10px 18px;
@@ -19,35 +52,90 @@
       text-decoration: none;
       font-weight: 600;
       font-size: 14px;
-      border: 1px solid #3ab54a;
+      border: 1px solid var(--accent);
       color: #fff;
-      background: #3ab54a;
+      background: var(--accent);
       transition: background 0.2s, transform 0.1s;
+      cursor: pointer;
     }
+
     .btn.secondary {
       background: transparent;
-      color: #3ab54a;
+      color: var(--accent);
     }
-    .btn:hover { background: #48c45a; transform: translateY(-1px); }
+
+    .btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
     .btn.secondary:hover { background: rgba(58,181,74,0.1); }
-    code { background: #0b0c10; padding: 2px 4px; border-radius: 4px; }
+
+    code { background: var(--code-bg); padding: 2px 4px; border-radius: 4px; }
+
     .status-online { color: #4caf50; font-weight: 700; }
     .status-offline { color: #f44336; font-weight: 700; }
-    footer { text-align: center; padding: 10px 0 20px; font-size: 12px; color: #777; }
+
+    footer {
+      text-align: center;
+      padding: 10px 0 20px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* Темочка */
+    .theme-toggle {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      border-radius: 999px;
+      border: 1px solid var(--accent);
+      background: var(--card-bg);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 12px;
+      z-index: 1000;
+      transition: background 0.2s, transform 0.1s, color 0.2s, border-color 0.2s;
+      gap: 4px;
+    }
+
+    .theme-toggle:hover {
+      transform: translateY(-1px);
+      background: rgba(58,181,74,0.1);
+    }
+
+    .theme-toggle span {
+      opacity: 0.65;
+    }
+
+    .theme-toggle span.active {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
+    .theme-toggle:focus {
+      outline: none;
+    }
   </style>
 </head>
 <body>
+
+<button id="theme-toggle" class="theme-toggle" aria-label="Переключить тему">
+  <span id="label-dark" class="active">Dark</span> /
+  <span id="label-light">Light</span>
+</button>
+
 <header>
   <h1>НАЗВАНИЕ ОЧЕРЕДНОЙ ХЕРНИ/СЕРВЕРА</h1>
-  <p>Краткое описание сервера или что-то там... 
-  </p>
+  <p>Краткое описание сервера или что-то там...</p>
 </header>
 
 <main>
   <section class="card">
     <h2>О сервере</h2>
     <p>
-      Что-то там про сервер... 
+      Что-то там про сервер...
     </p>
     <p>
       Адрес сервера: <code>DNS/IP/PORT</code><br>
@@ -69,14 +157,14 @@
       <li>Дождись одобрения и заходи по адресу сервера.</li>
     </ol>
     <div class="buttons">
-      <a class="btn" 
-      href="ССЫЛКА_НА_СБОРКУ" 
-      target="_blank" rel="noopener">
+      <a class="btn"
+         href="ССЫЛКА_НА_СБОРКУ"
+         target="_blank" rel="noopener">
         Скачать сборку
       </a>
-      <a class="btn secondary" 
-      href="https://docs.google.com/forms/d/e/1FAIpQLScXFmYOaUdD_0Vlyrm6G9GweF7qiv_RkxO5GIsSv2vpDAUa2w/viewform?usp=header" 
-      target="_blank" rel="noopener">
+      <a class="btn secondary"
+         href="https://docs.google.com/forms/d/e/1FAIpQLScXFmYOaUdD_0Vlyrm6G9GweF7qiv_RkxO5GIsSv2vpDAUa2w/viewform?usp=header"
+         target="_blank" rel="noopener">
         Подать заявку на вайт-лист
       </a>
     </div>
@@ -88,10 +176,11 @@
 </footer>
 
 <script>
-// НАСТРОЙКА: 
-const MC_SERVER_ADDRESS = "ТВОЙ.DNS.ИЛИ.IP";     // DNS/IP
-const MC_SERVER_PORT = 25565;                    // ЕСЛИ ХОСТИНГ ГОВНА ПОЕЛ
-// API mcsrvstat.us СТАТУСА СЕРВЕРА 
+// НАСТРОЙКИ СЕРВ
+const MC_SERVER_ADDRESS = "ТВОЙ.DNS.ИЛИ.IP"; // DNS/IP
+const MC_SERVER_PORT = 25565; // Порт
+
+// API mcsrvstat.us
 async function updateServerStatus() {
   const statusEl = document.getElementById("server-status");
   const playersEl = document.getElementById("server-players");
@@ -114,9 +203,64 @@ async function updateServerStatus() {
     playersEl.textContent = "Не удалось получить статус сервера.";
   }
 }
-
-// ОБНОВЛЕНИЕ СТАТУСА
 updateServerStatus();
+
+// УЧЁТ НАСТРОЕК СИСТ
+const THEME_KEY = "anonimcraft-theme";
+const themeToggleBtn = document.getElementById("theme-toggle");
+const labelDark = document.getElementById("label-dark");
+const labelLight = document.getElementById("label-light");
+
+function updateLabels(theme) {
+  if (theme === "light") {
+    labelLight.classList.add("active");
+    labelDark.classList.remove("active");
+  } else {
+    labelDark.classList.add("active");
+    labelLight.classList.remove("active");
+  }
+}
+
+function applyTheme(theme) {
+  if (theme === "light") {
+    document.body.classList.add("light");
+  } else {
+    document.body.classList.remove("light");
+  }
+  updateLabels(theme);
+}
+
+function getSystemTheme() {
+  if (window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: light)").matches) {
+    return "light";
+  }
+  return "dark";
+}
+
+// НАЧАЛЬНАЯ ТЕМ
+let initialTheme = localStorage.getItem(THEME_KEY);
+if (initialTheme !== "light" && initialTheme !== "dark") {
+  initialTheme = getSystemTheme();
+}
+applyTheme(initialTheme);
+
+// СМЕНА ТЕМ
+themeToggleBtn.addEventListener("click", () => {
+  const isLight = document.body.classList.contains("light");
+  const newTheme = isLight ? "dark" : "light";
+  applyTheme(newTheme);
+  localStorage.setItem(THEME_KEY, newTheme);
+});
+
+// СМЕНА ТЕМ НА НАСТРОЙ ПРОФ СИСТ
+if (!localStorage.getItem(THEME_KEY) && window.matchMedia) {
+  const mq = window.matchMedia("(prefers-color-scheme: light)");
+  mq.addEventListener("change", (e) => {
+    const newSystemTheme = e.matches ? "light" : "dark";
+    applyTheme(newSystemTheme);
+  });
+}
 </script>
 </body>
 </html>
