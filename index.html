@@ -177,10 +177,10 @@
 
 <script>
 // НАСТРОЙКИ СЕРВ
-const MC_SERVER_ADDRESS = "ТВОЙ.DNS.ИЛИ.IP"; // DNS/IP
-const MC_SERVER_PORT = 25565; // Порт
+const MC_SERVER_ADDRESS = "212.80.7.209"; // DNS/IP
+const MC_SERVER_PORT = 20062; // Порт
 
-// API mcsrvstat.us
+// mcsrvstat.us 
 async function updateServerStatus() {
   const statusEl = document.getElementById("server-status");
   const playersEl = document.getElementById("server-players");
@@ -203,7 +203,11 @@ async function updateServerStatus() {
     playersEl.textContent = "Не удалось получить статус сервера.";
   }
 }
+
+// перв запрос 
 updateServerStatus();
+// обнов каждые 30 сек
+setInterval(updateServerStatus, 30000);
 
 // УЧЁТ НАСТРОЕК СИСТ
 const THEME_KEY = "anonimcraft-theme";
