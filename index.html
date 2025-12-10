@@ -64,6 +64,11 @@
       color: var(--accent);
     }
 
+    .btn.small {
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+
     .btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
     .btn.secondary:hover { background: rgba(58,181,74,0.1); }
 
@@ -117,6 +122,20 @@
     .theme-toggle:focus {
       outline: none;
     }
+
+    /* Блок с вар скач */
+    .download-options {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .buttons .download-options[style*="flex"] {
+      align-self: flex-start;
+      margin-left: 0;
+      width: auto;
+    }
   </style>
 </head>
 <body>
@@ -138,7 +157,11 @@
       Что-то там про сервер...
     </p>
     <p>
-      Адрес сервера: <code>DNS/IP/PORT</code><br>
+      Адрес сервера:
+      <code id="server-address-text">65.108.21.166:25667</code>
+      <button class="btn secondary small" id="copy-address-btn">
+        Копировать
+      </button><br>
       Версия клиента: <code>X.XX.X</code>
     </p>
   </section>
@@ -157,11 +180,29 @@
       <li>Дождись одобрения и заходи по адресу сервера.</li>
     </ol>
     <div class="buttons">
-      <a class="btn"
-         href="https://www.mediafire.com/file/zdpo229a2fbeppw/Grape%2527s_FreshCraft_SteamPunk_Industry_DLC_ModPack_v2.6.2_%25281.20.1%2529.zip/file" 
-         target="_blank" rel="noopener">
+
+      <button class="btn" id="download-main">
         Скачать сборку
-      </a>
+      </button>
+
+      <div class="download-options" id="download-options">
+        <a class="btn secondary"
+           href="https://www.mediafire.com/file/zdpo229a2fbeppw/Grape%2527s_FreshCraft_SteamPunk_Industry_DLC_ModPack_v2.6.2_%25281.20.1%2529.zip/file"
+           target="_blank" rel="noopener">
+          Скачать c MediaFire
+        </a>
+        <a class="btn secondary"
+           href="https://drive.google.com/drive/folders/1iVJE3ALdJDplZYc8gQ6tcxN5Y_0Mf0Y9?usp=sharing"
+           target="_blank" rel="noopener">
+          Скачать с Google Drive
+        </a>
+        <a class="btn secondary"
+           href="https://disk.yandex.ru/d/waMPIXqvypBmHw"
+           target="_blank" rel="noopener">
+          Скачать с Yandex Disk
+        </a>
+      </div>
+
       <a class="btn secondary"
          href="https://docs.google.com/forms/d/e/1FAIpQLScXFmYOaUdD_0Vlyrm6G9GweF7qiv_RkxO5GIsSv2vpDAUa2w/viewform?usp=header"
          target="_blank" rel="noopener">
@@ -176,11 +217,9 @@
 </footer>
 
 <script>
-// НАСТРОЙКИ СЕРВ
-const MC_SERVER_ADDRESS = "65.108.21.166"; // DNS/IP
-const MC_SERVER_PORT = 25667; // Порт
+const MC_SERVER_ADDRESS = "65.108.21.166";
+const MC_SERVER_PORT = 25667;
 
-// mcsrvstat.us 
 async function updateServerStatus() {
   const statusEl = document.getElementById("server-status");
   const playersEl = document.getElementById("server-players");
@@ -196,20 +235,45 @@ async function updateServerStatus() {
     }
 
     statusEl.innerHTML = 'Статус: <span class="status-online">онлайн</span>';
-    playersEl.textContent =
-      `Игроков онлайн: ${data.players.online} из ${data.players.max}`;
+    playersEl.textContent = `Игроков онлайн: ${data.players.online} из ${data.players.max}`;
   } catch (e) {
     statusEl.innerHTML = 'Статус: <span class="status-offline">ошибка проверки</span>';
     playersEl.textContent = "Не удалось получить статус сервера.";
   }
 }
 
-// перв запрос 
 updateServerStatus();
-// обнов каждые 30 сек
 setInterval(updateServerStatus, 30000);
 
-// УЧЁТ НАСТРОЕК СИСТ
+const copyAddressBtn = document.getElementById("copy-address-btn");
+const serverAddressText = document.getElementById("server-address-text");
+
+copyAddressBtn.addEventListener("click", async () => {
+  const textToCopy = serverAddressText.textContent.trim();
+  if (!navigator.clipboard) {
+    alert("Ваш браузер не поддерживает автоматическое копирование.");
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(textToCopy);
+    copyAddressBtn.textContent = "Скопировано";
+    setTimeout(() => {
+      copyAddressBtn.textContent = "Копировать";
+    }, 2000);
+  } catch (err) {
+    console.error("Failed to copy:", err);
+    alert("Не удалось скопировать адрес.");
+  }
+});
+
+const downloadMainBtn = document.getElementById("download-main");
+const downloadOptions = document.getElementById("download-options");
+
+downloadMainBtn.addEventListener("click", () => {
+  const isHidden = downloadOptions.style.display === "" || downloadOptions.style.display === "none";
+  downloadOptions.style.display = isHidden ? "flex" : "none";
+});
+
 const THEME_KEY = "anonimcraft-theme";
 const themeToggleBtn = document.getElementById("theme-toggle");
 const labelDark = document.getElementById("label-dark");
@@ -235,21 +299,18 @@ function applyTheme(theme) {
 }
 
 function getSystemTheme() {
-  if (window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: light)").matches) {
+  if (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) {
     return "light";
   }
   return "dark";
 }
 
-// НАЧАЛЬНАЯ ТЕМ
 let initialTheme = localStorage.getItem(THEME_KEY);
 if (initialTheme !== "light" && initialTheme !== "dark") {
   initialTheme = getSystemTheme();
 }
 applyTheme(initialTheme);
 
-// СМЕНА ТЕМ
 themeToggleBtn.addEventListener("click", () => {
   const isLight = document.body.classList.contains("light");
   const newTheme = isLight ? "dark" : "light";
@@ -257,7 +318,6 @@ themeToggleBtn.addEventListener("click", () => {
   localStorage.setItem(THEME_KEY, newTheme);
 });
 
-// СМЕНА ТЕМ НА НАСТРОЙ ПРОФ СИСТ
 if (!localStorage.getItem(THEME_KEY) && window.matchMedia) {
   const mq = window.matchMedia("(prefers-color-scheme: light)");
   mq.addEventListener("change", (e) => {
